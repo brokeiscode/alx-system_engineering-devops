@@ -11,6 +11,7 @@
 | `2-path` | Add `/action` to the `PATH` and `/action` should be the last directory the shell looks |
 | `3-paths` | Create a script that counts the number of directories in the PATH |
 | `4-global_variables` | Create a script that lists environment variables |
+| `5-local_variables` | A script that lists all local variables and environment variables, and functions |
 
 ## Usage
 
