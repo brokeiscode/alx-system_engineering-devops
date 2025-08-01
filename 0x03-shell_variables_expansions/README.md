@@ -9,6 +9,7 @@
 | `0-alias` | Creates an alias `ls` that runs `rm *` |
 | `1-hello_you` | Create a script that prints hello user, where user is the current Linux user |
 | `2-path` | Add `/action` to the `PATH` and `/action` should be the last directory the shell looks |
+| `3-paths` | Create a script that counts the number of directories in the PATH |
 
 ## Usage
 
