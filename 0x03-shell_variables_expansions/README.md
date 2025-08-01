@@ -16,6 +16,13 @@ To test script in the current shell environment, use `source`:
 $ source ./file-name
 ```
 
+Make script executable and run:
+
+```bash
+$ chmod +x file_name
+$ ./file_name
+```
+
 ## Requirements
 
 * Ubuntu 20.04 LTS
