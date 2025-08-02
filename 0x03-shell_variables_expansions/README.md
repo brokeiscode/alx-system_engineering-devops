@@ -20,6 +20,7 @@
 | `11-binary_to_decimal` | A script that converts a number from base 2 to base 10 |
 | `12-combinations` | Create a script that prints all possible combinations of two letters, except `oo` |
 | `13-print_float` | Write a script that prints a number with two decimal places |
+| `100-decimal_to_hexadecimal` | Write a script that converts a number from base 10 to base 16 |
 
 ## Usage
 
