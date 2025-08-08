@@ -1,0 +1,47 @@
+# Scale Up: Advanced Web Infrastructure Design
+
+To scale up and enhance the previous design, we'll introduce an additional server and further distribute components to improve **resilience**, **performance**, and **scalability**. This will result in a more robust infrastructure capable of handling increased traffic and reducing single points of failure.
+
+---
+
+### Diagram
+
+https://imgur.com/a/pxGsGWj
+
+## Infrastructure Design
+
+This scaled-up infrastructure will consist of at least five servers, moving towards a highly available and distributed architecture:
+
+### Two Load Balancers (HAproxy Cluster) ⚖️
+
+By having two HAproxy instances configured as a cluster (e.g., using VRRP for active-passive failover or DNS-based round robin for active-active), we eliminate the load balancer as a **Single Point of Failure (SPOF)**. If one load balancer fails, the other can immediately take over, ensuring continuous service availability. This provides redundancy at the entry point of our infrastructure.
+
+### Multiple Web Servers (Nginx) 🌐
+
+Instead of combining Nginx with the application server on the same machine, we'll dedicate separate servers for Nginx. This allows the web server layer to be scaled independently of the application layer. Nginx servers are efficient at serving static content and acting as reverse proxies. Adding more web servers enables the system to handle a higher volume of incoming HTTP requests before reaching a bottleneck.
+
+### Multiple Application Servers 📜
+
+By dedicating separate servers for the application codebase, we can scale the application processing power independently. If the application requires more computational resources (e.g., due to complex business logic or increased user activity), we can simply add more application servers without affecting the web server or database tiers. This also makes deployments and maintenance easier for the application layer.
+
+### Database Cluster (MySQL Master-Replica) 💾
+
+To address the SPOF of a single MySQL server accepting writes, we introduce a **MySQL Master-Replica cluster** (also known as Primary-Replica). This involves:
+
+- **One Master (Primary) Database Server:** This server handles all write operations (INSERT, UPDATE, DELETE).
+- **One or More Replica (Slave) Database Servers:** These servers asynchronously replicate data from the Master and handle read operations (SELECT).
+
+This separation provides **read scalability** by distributing read queries across multiple replicas. More importantly, it offers high availability for data: if the Master database fails, one of the replicas can be promoted to Master, minimizing downtime for write operations. This architecture significantly reduces the database as a SPOF for both reads and writes (with a proper failover mechanism).
+
+---
+
+## Diagram Concept
+
+The visual representation would show:
+
+- Users sending requests to the HAproxy Load Balancer Cluster.
+- The HAproxy Load Balancer Cluster distributing requests to a pool of Nginx Web Servers.
+- The Nginx Web Servers forwarding dynamic requests to a pool of Application Servers.
+- The Application Servers interacting with the MySQL Database Cluster, which consists of a Master Database and one or more Replica Databases. A clear replication flow would be shown from Master to Replica(s).
+
+This design ensures that each tier of the infrastructure can be scaled and managed independently, providing greater resilience and performance compared to the previous setups.
