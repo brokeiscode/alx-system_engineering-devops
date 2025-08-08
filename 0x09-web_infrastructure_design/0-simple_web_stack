@@ -1,0 +1,40 @@
+# Simple Web Stack: A One-Server Infrastructure
+
+This document outlines the design and functionality of a one-server web infrastructure, detailing the user's journey to access **www.foobar.com** and the roles of each component.
+
+---
+
+### Diagram
+
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/yWLe7A4" data-context="false" ><a href="//imgur.com/a/yWLe7A4"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+
+### The User's Journey
+
+1.  **User Request**: A user types `www.foobar.com` into their browser.
+2.  **DNS Resolution**: The browser queries a **DNS resolver** to find the IP address for `www.foobar.com`. The **domain name** `foobar.com` is a human-readable address.
+3.  **DNS Record**: The **www** record is an **A record** that maps the hostname to the server's IP address, `8.8.8.8`.
+4.  **Server Communication**: The browser sends an HTTP request to the server at `8.8.8.8`. This communication is facilitated by the **TCP/IP stack**.
+5.  **Web Server (Nginx)**: The request is received by the web server, which serves static content directly and acts as a **reverse proxy** for dynamic requests.
+6.  **Application Server**: Dynamic requests are forwarded to the application server, which runs the website's **application files** (codebase).
+7.  **Database (MySQL)**: The application server queries the **database** to retrieve or store dynamic data.
+8.  **Response**: The application server sends the generated content back to the web server, which then sends the complete response to the user's browser.
+
+---
+
+### Key Components
+
+- **Server**: A physical or virtual machine that hosts all website components.
+- **Domain Name**: A user-friendly name (`foobar.com`) that points to an IP address.
+- **Web Server (Nginx)**: Manages incoming requests, serves static files, and proxies dynamic requests.
+- **Application Server**: Executes the website's code to generate dynamic content.
+- **Database (MySQL)**: Stores and manages all persistent website data.
+
+---
+
+### Issues with this Infrastructure
+
+This simple setup has critical limitations:
+
+- **Single Point of Failure (SPOF)**: The entire website will go offline if the single server fails.
+- **Downtime for Maintenance**: The website becomes unavailable during maintenance tasks like deploying new code or applying updates.
+- **Cannot Scale**: The single server cannot handle a high volume of traffic, leading to poor performance or crashes under heavy load.

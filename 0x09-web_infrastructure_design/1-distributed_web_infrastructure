@@ -1,0 +1,46 @@
+# Distributed Web Stack: A Three-Server Infrastructure
+
+This document outlines a three-server web infrastructure for **www.foobar.com**, which improves upon a single-server setup by distributing the workload and providing redundancy.
+
+---
+
+### Diagram
+
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/OfX2b66" data-context="false" ><a href="//imgur.com/a/OfX2b66"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+
+### Infrastructure Design
+
+The setup consists of three distinct servers, each with a specialized role:
+
+1.  **Load Balancer (HAproxy)**
+
+    - **Purpose**: Acts as the single entry point for all web traffic, distributing requests to the application servers to prevent any one server from being overwhelmed.
+    - **Distribution Algorithm**: Uses **Round Robin**, which sends each new request to the next server in a circular order, ensuring an even distribution of load.
+    - **Setup**: This is an **Active-Passive** configuration, with a single active load balancer. An Active-Active setup would require multiple load balancers to share the workload.
+
+2.  **Web/Application Server (Nginx)**
+
+    - **Purpose**: This server hosts the **web server** and runs the website's **application files**, handling incoming requests for dynamic content. Multiple servers like this would be used to handle increased traffic.
+
+3.  **Database Server (MySQL)**
+    - **Purpose**: A dedicated server for the database, which improves performance and isolates sensitive data. This is the **Primary (Master)** node in a cluster.
+    - **Primary-Replica Cluster**: In this model, the **Primary node** handles all **read and write** operations, while a **Replica node** is use for **read-only** operations to distribute the read load.
+
+---
+
+### Issues with this Infrastructure
+
+Despite being a more robust setup, this design still has several key weaknesses:
+
+- **Single Points of Failure (SPOFs)**:
+
+  - The single **load balancer** is a SPOF. If it fails, the entire site goes down.
+  - The single **Primary database** is a SPOF. If it fails, no write operations can occur, leading to significant site functionality issues.
+
+- **Security Issues**:
+
+  - **No Firewall**: Without a firewall, the servers are exposed to malicious traffic and unauthorized access.
+  - **No HTTPS**: Communication is unencrypted, leaving sensitive user data vulnerable to interception.
+
+- **No Monitoring**:
+  - The absence of a monitoring system makes it difficult to track server health, diagnose performance issues, and respond to failures in a timely manner.

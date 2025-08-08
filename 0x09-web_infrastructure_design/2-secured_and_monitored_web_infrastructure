@@ -1,0 +1,39 @@
+# Secured and Monitored Web Stack: A Three-Server Infrastructure
+
+This document outlines a robust three-server web infrastructure for **www.foobar.com**, adding critical layers for security and performance monitoring to a distributed setup.
+
+---
+
+### Diagram
+
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/W6fWehv" data-context="false" ><a href="//imgur.com/a/W6fWehv"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+
+### Infrastructure Design
+
+This setup builds on the distributed model by adding key components:
+
+1.  **Firewalls**
+
+    - **Purpose**: To control network traffic and protect each server from unauthorized access. We've added a firewall in front of the load balancer, web server, and database server to create a layered defense.
+    - **Functionality**: Each firewall is configured with rules to only allow necessary traffic, ensuring a high level of security.
+
+2.  **SSL Certificate**
+
+    - **Purpose**: To enable **HTTPS**, which encrypts the communication between the user's browser and the server.
+    - **Functionality**: The certificate is installed on the load balancer, ensuring all traffic to the website is served securely, protecting sensitive user data.
+
+3.  **Monitoring Clients**
+    - **Purpose**: To collect data about server health and performance, enabling proactive management and troubleshooting.
+    - **Functionality**: A lightweight client on each server collects metrics (CPU, memory, etc.) and sends them to a monitoring service. To monitor a web server's **QPS (Queries Per Second)**, the client would analyze access logs to count requests over time.
+
+---
+
+### Issues with this Infrastructure
+
+While more advanced, this setup still has some critical weaknesses:
+
+- **SSL Termination at the Load Balancer**: Terminating SSL at the load balancer can be a security risk. The traffic between the load balancer and the internal application servers is often unencrypted, leaving it vulnerable to interception if an attacker gains access to the internal network.
+
+- **Single Database Write Server**: The single **Primary (Master)** database is a **Single Point of Failure (SPOF)** for write operations. If this server fails, the application cannot save or modify data, severely impacting functionality.
+
+- **Homogeneous Server Components**: A design with all components (database, web server, application) on a single server is problematic because it prevents independent scaling. Our current design with separate servers for each role is superior, allowing each component to be scaled as needed.
